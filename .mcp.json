@@ -1,0 +1,17 @@
+
+{
+  "mcpServers": {
+    "playwright-test": {
+      "type": "stdio",
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "playwright",
+        "run-test-mcp-server"
+      ],
+      "tools": ["*"]
+    }
+  }
+}
