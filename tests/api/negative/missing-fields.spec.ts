@@ -125,5 +125,48 @@ test(`@functional TC-API-CHAIN-001:Create booking and update booking`,async({req
 
 })
 
+test(`@functional patch booking`,async({request})=>{
 
+    const authResponse = await request.post("https://restful-booker.herokuapp.com/auth",{
+        data:{
+            username:"admin",
+            password:"password123"
+        }
+    })
+
+    const authResponseBody = await authResponse.json()
+    const token = authResponseBody.token
+
+    const postResponse = await request.post("https://restful-booker.herokuapp.com/booking",{
+        data:{
+               firstname: 'Ericsson', 
+               lastname: 'Jio',
+               totalprice: 121,
+               depositpaid: true,
+               bookingdates: { checkin: '2026-02-15', checkout: '2026-12-29' }
+        }
+    })
+
+    const postresponseBody = await postResponse.json()
+    expect(postResponse.status()).toBe(200)
+
+    const bookingId = postresponseBody.bookingid
+
+    const patchResponse = await request.patch(`https://restful-booker.herokuapp.com/booking/${bookingId}`,{
+        headers:{
+            cookie:`token=${token}`
+        },
+        data:{
+            firstname: 'updated Ericsson'
+        }
+    })
+
+    const patchResponseBody = await patchResponse.json()
+
+    expect(patchResponse.status()).toBe(200)
+    expect(patchResponseBody.firstname).toBe("updated Ericsson")
+    expect(patchResponseBody.lastname).toBe("Jio")
+    expect(patchResponseBody.totalprice).toBe(121)
+
+})
 })
